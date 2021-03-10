@@ -1,0 +1,7 @@
+__pycache__
+.dist
+.vscode
+screenshots
+database.db
+geckodriver.exe
+geckodriver.log
