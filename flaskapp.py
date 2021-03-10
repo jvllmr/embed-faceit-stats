@@ -6,7 +6,8 @@ app = Flask(__name__)
 
 @app.route("/<name>")
 def return_image(name):
-    if entry := sql.execute("select * from lastrefresh where name=?", (name,)).fetchone():
+    if sql.execute("select * from lastrefresh where name=?", (name,)).fetchone():
+        entry = sql.execute("select * from lastrefresh where name=?", (name,)).fetchone()
         entrydate = entry[1]
         entryyear = entrydate.split(":")[0]
         entrymonth = entrydate.split(":")[1]
