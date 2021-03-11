@@ -4,6 +4,15 @@ from takescreenshot import take_screenshot
 from datetime import datetime
 app = Flask(__name__)
 
+if not "screenshots" in os.listdir():
+        os.mkdir("screenshots")
+        if not "database.db" in os.listdir():
+            sql = sqlite3.connect("database.db")
+            sql.execute("create table lastrefresh (name text, date text)")
+            sql.commit()
+        else:
+            sql = sqlite3.connect("database.db")
+
 @app.route("/<name>")
 def return_image(name):
     if sql.execute("select * from lastrefresh where name=?", (name,)).fetchone():
@@ -39,13 +48,5 @@ def youre_wrong_here():
 if __name__ == "__main__":
     from gevent import pywsgi
     from geventwebsocket.handler import WebSocketHandler
-    if not "screenshots" in os.listdir():
-        os.mkdir("screenshots")
-    if not "database.db" in os.listdir():
-        sql = sqlite3.connect("database.db")
-        sql.execute("create table lastrefresh (name text, date text)")
-        sql.commit()
-    else:
-        sql = sqlite3.connect("database.db")
     server = pywsgi.WSGIServer(('', 5005), app, handler_class=WebSocketHandler)
     server.serve_forever()
