@@ -5,6 +5,11 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from PIL import Image
 import os
+
+
+if not "screenshots" in os.listdir():
+    os.mkdir("screenshots")
+
 def take_screenshot(name):
     driver_options = Options()
     driver_options.add_argument("--headless")

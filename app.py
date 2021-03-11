@@ -2,16 +2,11 @@ from flask import Flask, send_file, abort, Response
 import os, sqlite3, threading
 from takescreenshot import take_screenshot
 from datetime import datetime
+from sql import sql
 app = Flask(__name__)
 
-if not "screenshots" in os.listdir():
-        os.mkdir("screenshots")
-        if not "database.db" in os.listdir():
-            sql = sqlite3.connect("database.db")
-            sql.execute("create table lastrefresh (name text, date text)")
-            sql.commit()
-        else:
-            sql = sqlite3.connect("database.db")
+
+        
 
 @app.route("/<name>")
 def return_image(name):
