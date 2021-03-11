@@ -2,7 +2,7 @@ from flask import Flask, send_file, abort, Response
 import os, sqlite3, threading
 from takescreenshot import take_screenshot
 from datetime import datetime
-from sql import sql
+
 app = Flask(__name__)
 
 
@@ -10,6 +10,12 @@ app = Flask(__name__)
 
 @app.route("/<name>")
 def return_image(name):
+    if not "database.db" in os.listdir():
+        sql = sqlite3.connect("database.db")
+        sql.execute("create table lastrefresh (name text, date text)")
+        sql.commit()
+    else:
+        sql = sqlite3.connect("database.db")
     if sql.execute("select * from lastrefresh where name=?", (name,)).fetchone():
         entry = sql.execute("select * from lastrefresh where name=?", (name,)).fetchone()
         entrydate = entry[1]
@@ -33,6 +39,7 @@ def return_image(name):
         sql.execute("insert into lastrefresh values (?,?)",(name,datetime.now().strftime("%Y:%m:%d")))
         sql.commit()
         return abort(Response("This resource doesn't exist. Maybe it takes some time to be created..."))
+    sql.close()
 
 @app.route("/")
 def youre_wrong_here():
