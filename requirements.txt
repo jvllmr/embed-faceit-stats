@@ -2,3 +2,4 @@ gevent
 gevent-websocket
 flask
 selenium
+PIL
